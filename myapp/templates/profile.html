@@ -1,0 +1,84 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="section mt-0 pt-5">
+  <div class="container-fluid">
+    <div class="profile d-flex col-lg-12">
+      <div class="pro col-lg-12 col-md-12 col-sm-12">
+        <div class="profile-form d-flex w-auto justify-content-center align-items-center pr-2">
+          {% for user in userdetails %}
+          <div class="image-profile">
+            <img src="{{ user.dp.url }}" alt="" />
+          </div>
+          <div class="field-data mt-5 mb-5">
+            <form action="">
+              <label for="fname" class="form-label ">First Name</label>
+              <input type="text" name="fname" id="fname" value="{{user.First_Name}}" class="form-control" placeholder="Enter your first name" required /><br/>
+              <label for="lname" class="form-label">Last Name</label>
+              <input type="text" name="lname" id="lname" value="{{user.Last_Name}}" class="form-control" placeholder="Enter your last name" /><br/>
+
+              <label for="phone" class="form-label">Mobile</label>
+              <input type="number" name="phone" id="phone" value="{{user.lid.Mobile}}" class="form-control" placeholder="Enter your phone number" /><br/>
+              <label for="dob" class="form-label">Date Of Birth</label>
+              <input type="date" name="dob" id="dob" value="{{user.DOB}}" class="form-control"><br/>
+              <label for="Address"class="form-label">Address</label>
+              <textarea name="Address" id="Address" value="{{user.Address}}" cols="30" rows="2" class="form-control" placeholder="Enter your message"></textarea><br/>
+
+              <label for="Area" class="form-label">Area</label>
+              <select name="Area" id="Area"  class="form-control">
+                <option value="1">{{user.Area_Name}}</option>
+                <option value="2">Ahemdabad</option>
+                <option value="3">Surat</option>
+              </select><br/>
+              <label for="image" class="form-label">Profile Picture</label>
+              <input type="file" name="image" id="image" class="form-control"><br/>
+              <button class="btn btn-primary btn-block border-0 py-3" type="submit">Save</button>
+              
+            </form>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% comment %} <div class="order col-lg-7 col-md-6 col-sm-12">
+        <h2>Your Orders</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              
+              <th>Ship To</th>
+              <th>Ordered On</th>                    
+              <th>#Items</th>
+              <th>Order Total</th>
+              <th>Status Date</th>
+              <th>Status</th>                    
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for order in  orders %}
+              
+              <td>
+                <address>
+                <strong>{{ order.lid}}</strong><br>
+                {{order.Address}}<br/>
+              <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+              </address>
+              </td>
+              <td>{{order.o_DateTime}}</td>
+              <td>{{ order.Cart_Items.count}}</td>                    
+              <td>{{order.Grand_Total}}</td>
+              <td>{{order.o_DateTime}}</td>
+              <td><span class="label label-success">{{order.o_Status}}</span></td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div> {% endcomment %}
+    </div>
+  </div>
+  </div>
+
+{% endblock  %}
+  

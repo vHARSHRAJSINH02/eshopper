@@ -1,0 +1,428 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+{% load static %}
+
+<!-- Page Header Start -->
+
+<div class="section">
+  <div class="container-fluid bg-secondary mb-2">
+      <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+          <h1 class="font-weight-semi-bold text-uppercase pt-5 mb-3">Orders</h1>
+          <div class="d-inline-flex">
+              <p class="m-0"><a href="{% url 'index' %}">Home</a></p>
+              <p class="m-0 px-2">-</p>
+              <p class="m-0">Orders</p>
+          </div>
+      </div>
+  </div>
+</div>
+  <!-- Page Header End -->
+<div class="container-fluid pt-3">
+    <div class="row px-xl-12">
+        
+          <div class="col-lg-12 table-responsive mb-5">
+            <ul class="nav nav-pills justify-content-between w-75 py-3 mx-auto" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="btn btn-primary rounded-pill  px-4 mx-sm-0 mx-2 mt-sm-0 mt-3" id="currentOrdersButton" data-bs-toggle="tab" href="#link" role="tab"
+                        aria-controls="link" aria-selected="false" tabindex="-1">Your Current Orders</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="btn btn-primary rounded-pill  px-4 mx-sm-0 mx-2 mt-sm-0 mt-3 " id="pastOrdersButton" data-bs-toggle="tab" href="#link" role="tab"
+                        aria-controls="link" aria-selected="false" tabindex="-1">Your Completed Orders</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="btn  btn-primary rounded-pill px-4 mx-sm-0 mx-2 mt-sm-0 mt-3" id="cancledordersButton" data-bs-toggle="tab" href="#link2" role="tab"
+                        aria-controls="link2" aria-selected="false" tabindex="-1" >Your Canceled Orders</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="btn btn-primary rounded-pill  px-4 mx-sm-0 mx-2 mt-sm-0 mt-3" id="replacedordersButton" data-bs-toggle="tab" href="#link1" role="tab"
+                        aria-controls="link" aria-selected="false" tabindex="-1">Your Order In Replace</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="btn  btn-primary rounded-pill px-4 mx-sm-0 mx-2 mt-sm-0 mt-3" id="replacesdordersButton" data-bs-toggle="tab" href="#link2" role="tab"
+                        aria-controls="link2" aria-selected="false" tabindex="-1" >Your Replaced Orders</a>
+                </li>
+            </ul>
+          </div>
+{% comment %} =============== {% endcomment %}
+
+{% comment %} =============== {% endcomment %}
+        <div id="currentOrders" class="mx-auto" style="display: none;">
+            <!-- Your table for current orders goes here -->
+            <table class="table table-bordered text-center  mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Ship To</th>
+                        <th>Ordered On</th>                    
+                        <th>#Items</th>
+                        <th>Order Total</th>
+                        <th>Status Date</th>
+                        <th>Payment Status</th>
+                        <th>Status</th>   
+                        <th>Action</th>     
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    
+                    {% for order in  current_orders %}
+                    {% csrf_token %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td class="align-middle">
+                          <address>
+                          {{order.shipadd_id.Address}}, {{ order.shipadd_id.Area_Name }}, {{ order.shipadd_id.Area_Name.City_Name }} <br/>
+                        <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                        </address>
+                        </td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{ order.Cart_Items.count}}</td>                    
+                        <td class="align-middle">{{order.Grand_Total}}</td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{order.Payment_Status}}</td>
+                        <td class="align-middle text-warning"><span class="label label-success">{{order.o_Status}}</span></td>
+                        <td class="align-middle">
+                            <butto class="btn btn-primary cancel-order" data-oid="{{order.o_id}}">Cancel Order</butto>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="pastOrders" class="mx-auto" style="display: none;">
+            <!-- Your table for past orders goes here -->
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Ship To</th>
+                        <th>Ordered On</th>                    
+                        <th>#Items</th>
+                        <th>Order Total</th>
+                        <th>Status Date</th>
+                        <th>Payment Status</th>
+                        <th>Status</th>  
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    
+                    {% for order in  past_orders %}
+                    {% csrf_token %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td class="align-middle">
+                          <address>
+                          {{order.shipadd_id.Address}}, {{ order.shipadd_id.Area_Name }}, {{ order.shipadd_id.Area_Name.City_Name }} <br/>
+                        <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                        </address>
+                        </td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{ order.Cart_Items.count}}</td>                    
+                        <td class="align-middle">{{order.Grand_Total}}</td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{order.Payment_Status}}</td>
+                        <td class="align-middle  text-success"><span class="label label-success">{{order.o_Status}}</span></td>
+                        <td class="align-middle">
+                            <butto class="btn btn-primary cancel-order" data-oid="{{order.o_id}}">Replace Order</butto>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="inreplaceorders" class="mx-auto" style="display: none;">
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Ship To</th>
+                        <th>Ordered On</th>                    
+                        <th>#Items</th>
+                        <th>Order Total</th>
+                        <th>Status Date</th>
+                        <th>Payment Status</th>
+                        <th>Status</th>   
+                        <th>Action</th>     
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    
+                    {% for order in  inreplace_orders %}
+                    {% csrf_token %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td class="align-middle">
+                          <address>
+                          {{order.shipadd_id.Address}}, {{ order.shipadd_id.Area_Name }}, {{ order.shipadd_id.Area_Name.City_Name }} <br/>
+                        <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                        </address>
+                        </td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{ order.Cart_Items.count}}</td>                    
+                        <td class="align-middle">{{order.Grand_Total}}</td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{order.Payment_Status}}</td>
+                        <td class="align-middle text-danger"><span class="label label-success">{{order.o_Status}}</span></td>
+                        <td class="align-middle">
+                            <butto class="btn btn-primary cancel-replace" data-oid="{{order.o_id}}">Cancel Replace</butto>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="cancledorders" class="mx-auto" style="display: none;">
+            <!-- Your table for past orders goes here -->
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Ship To</th>
+                        <th>Ordered On</th>                    
+                        <th>#Items</th>
+                        <th>Order Total</th>
+                        <th>Status Date</th>
+                        <th>Payment Status</th>
+                        <th>Status</th>        
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    
+                    {% for order in  canceled_orders %}
+                    {% csrf_token %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td class="align-middle">
+                          <address>
+                          {{order.shipadd_id.Address}}, {{ order.shipadd_id.Area_Name }}, {{ order.shipadd_id.Area_Name.City_Name }} <br/>
+                        <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                        </address>
+                        </td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{ order.Cart_Items.count}}</td>                    
+                        <td class="align-middle">{{order.Grand_Total}}</td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{order.Payment_Status}}</td>
+                        <td class="align-middle text-danger"><span class="label label-success">{{order.o_Status}}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div id="replacedorders" class="mx-auto" style="display: none;">
+            <!-- Your table for past orders goes here -->
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>No.</th>
+                        <th>Ship To</th>
+                        <th>Ordered On</th>                    
+                        <th>#Items</th>
+                        <th>Order Total</th>
+                        <th>Status Date</th>
+                        <th>Payment Status</th>
+                        <th>Status</th>        
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    
+                    {% for order in  replaced_orders %}
+                    {% csrf_token %}
+                    <tr>
+                        <td class="align-middle">{{ forloop.counter }}</td>
+                        <td class="align-middle">
+                          <address>
+                          {{order.shipadd_id.Address}}, {{ order.shipadd_id.Area_Name }}, {{ order.shipadd_id.Area_Name.City_Name }} <br/>
+                        <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                        </address>
+                        </td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{ order.Cart_Items.count}}</td>                    
+                        <td class="align-middle">{{order.Grand_Total}}</td>
+                        <td class="align-middle">{{order.o_DateTime}}</td>
+                        <td class="align-middle">{{order.Payment_Status}}</td>
+                        <td class="align-middle text-danger"><span class="label label-success">{{order.o_Status}}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            
+        </div>
+        
+    </div>
+</div>
+{% comment %} <div class="section mt-0 pt-5">
+    
+           
+                
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Ship To</th>
+                      <th>Ordered On</th>                    
+                      <th>#Items</th>
+                      <th>Order Total</th>
+                      <th>Status Date</th>
+                      <th>Status</th>                    
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      {% for order in  orders %}
+                      <td></td>
+                      <td>
+                        <address>
+                        <strong>{{ order.lid}} {{ order.lid.First_Name }}</strong><br>
+                        {{order.Address}}, {{ order.Area }}, {{ order.Area.City_Name }} <br/>
+                      <abbr title="Phone">P:</abbr> {{order.lid.Mobile}}
+                      </address>
+                      </td>
+                      <td>{{order.o_DateTime}}</td>
+                      <td>{{ order.Cart_Items.count}}</td>                    
+                      <td>{{order.Grand_Total}}</td>
+                      <td>{{order.o_DateTime}}</td>
+                      <td><span class="label label-success">{{order.o_Status}}</span></td>
+                      {% endfor %}
+                    </tr>
+                  </tbody>
+                </table>
+            
+       
+</div> {% endcomment %}
+<script>
+    document.getElementById('currentOrdersButton').addEventListener('click', function() {
+        document.getElementById('currentOrders').style.display = 'block';
+        document.getElementById('pastOrders').style.display = 'none';
+        document.getElementById('cancledorders').style.display = 'none';
+        document.getElementById('inreplaceorders').style.display = 'none';
+        document.getElementById('replacedorders').style.display = 'none';
+    });
+
+    document.getElementById('pastOrdersButton').addEventListener('click', function() {
+        document.getElementById('currentOrders').style.display = 'none';
+        document.getElementById('inreplaceorders').style.display = 'none';
+        document.getElementById('cancledorders').style.display = 'none';
+        document.getElementById('replacedorders').style.display = 'none';
+        document.getElementById('pastOrders').style.display = 'block';
+    });
+    document.getElementById('cancledordersButton').addEventListener('click', function() {
+        document.getElementById('currentOrders').style.display = 'none';
+        document.getElementById('cancledorders').style.display = 'block';
+        document.getElementById('pastOrders').style.display = 'none';
+        document.getElementById('inreplaceorders').style.display = 'none';
+        document.getElementById('replacedorders').style.display = 'none';
+    });
+    document.getElementById('replacedordersButton').addEventListener('click', function() {
+        document.getElementById('currentOrders').style.display = 'none';
+        document.getElementById('cancledorders').style.display = 'none';
+        document.getElementById('pastOrders').style.display = 'none';
+        document.getElementById('replacedorders').style.display = 'none';
+        document.getElementById('inreplaceorders').style.display = 'block';
+    });
+    document.getElementById('replacesdordersButton').addEventListener('click', function() {
+        document.getElementById('currentOrders').style.display = 'none';
+        document.getElementById('cancledorders').style.display = 'none';
+        document.getElementById('pastOrders').style.display = 'none';
+        document.getElementById('inreplaceorders').style.display = 'none';
+        document.getElementById('replacedorders').style.display = 'block';
+    });
+</script>
+<script>
+    document.querySelectorAll('.cancel-order').forEach(button => {
+        button.addEventListener('click', function() {
+            var o_id = this.dataset.oid; 
+    
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var formdata = {
+                'o_id': o_id
+            };
+            console.log(formdata);
+            $.ajax({
+                url:'/Cancel_Order',
+                method:'POST',
+                contentType:'application/json',
+                headers : {
+                    'X-CSRFToken':csrfToken
+                },
+                data:JSON.stringify(formdata),
+                success:function(data){
+                    if (data.Status) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseJSON) {
+                        // If response is JSON, handle it
+                        var errorMsg = xhr.responseJSON;
+                        alert('Error occurred: ' + errorMsg.Msg);
+                        if (errorMsg.redirect_url) {
+                            window.location.href = errorMsg.redirect_url;
+                        }
+                    } else {
+                        // If response is not JSON, handle it accordingly
+                        console.error('Non-JSON response:', xhr.responseText);
+                        // Handle non-JSON response appropriately
+                    }
+                }
+                
+            });
+        });
+    });
+    document.querySelectorAll('.cancel-replace').forEach(button => {
+        button.addEventListener('click', function() {
+            var o_id = this.dataset.oid; 
+    
+            var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            var formdata = {
+                'o_id': o_id
+            };
+            console.log(formdata);
+            $.ajax({
+                url:'/Cancel_Replace',
+                method:'POST',
+                contentType:'application/json',
+                headers : {
+                    'X-CSRFToken':csrfToken
+                },
+                data:JSON.stringify(formdata),
+                success:function(data){
+                    if (data.Status) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.responseJSON) {
+                        // If response is JSON, handle it
+                        var errorMsg = xhr.responseJSON;
+                        alert('Error occurred: ' + errorMsg.Msg);
+                        if (errorMsg.redirect_url) {
+                            window.location.href = errorMsg.redirect_url;
+                        }
+                    } else {
+                        // If response is not JSON, handle it accordingly
+                        console.error('Non-JSON response:', xhr.responseText);
+                        // Handle non-JSON response appropriately
+                    }
+                }
+                
+            });
+        });
+    });
+</script>
+{% endblock  %}

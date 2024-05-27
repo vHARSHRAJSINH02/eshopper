@@ -1,0 +1,27 @@
+
+{% extends "basic.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<!-- Categories Start -->
+<div class="container-fluid pt-5 mt-5">
+    <div class="row px-xl-5 pb-3">
+        {% for subcategory, product_count in subcategories_with_counts %}
+        <div class="col-lg-4 col-md-6 pb-1">
+            <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
+                <p class="text-right">{{ product_count }} Products</p>
+                <a href="{% url 'shop' subcategory.s_id %}" class="cat-img position-relative overflow-hidden mb-3">
+                    <img class="img-fluid" src="{{ subcategory.SubCategory_Image.url }}" alt="">
+                </a>
+                <h5 class="font-weight-semi-bold m-0"> {{ subcategory.Subcategory_Name }}</h5>
+            </div>
+        </div>
+        {% endfor  %}
+    </div>
+</div>
+
+<!-- Categories End -->
+
+{% endblock %}

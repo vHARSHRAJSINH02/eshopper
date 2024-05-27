@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Black Raven Fashion</title>
+
+    <!-- bootstrap css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- customizes css -->
+
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+
+   
+
+
+    </style>
+  </head>
+  <body>
+
+
+      {% comment %}forgot pasword{% endcomment %}
+      <div class="section mt-5 pt-5">
+        <div class="container-fluid bg-body-tertiary d-block">
+          <div class="row justify-content-center">
+            <div class="maincard col-12 col-md-6 col-lg-4">
+              <div class="card text-center border-0 p-5" id="forgotPassword">
+                <h2 class="fw-bold pb-3 pt-3">Reset password</h2>
+                {% csrf_token %}
+                <div class="otp-field pb-4 pt-3 flex-column">
+                  <div class="form-group">
+                    <input type="password" id="Password1" name="Password1" class="otpform form-control " value="password">
+                    <input type="password" id="Password2" name="Password2" class="otpform form-control mt-2" value="confirm password">
+                  </div>
+                </div> 
+                <div class="div">
+                  <button type="submit" class="btn btn-primary rounded-pill mb-3 font-weight-semi-bold pt-2 pb-2 resetpass">
+                      Send OTP</button>
+                </div>
+                <p>
+                  Do not have account? <a href="{% url 'login' %}">Sign up</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <script>
+        document.querySelectorAll('.resetpass').forEach(button => {
+            button.addEventListener('click', function() {
+                var pass1Input = document.querySelector('#Password1');
+                console.log('Email Input:', pass1Input);
+                var pass2Input = document.querySelector('#Password2');
+                console.log('Mobile Input:', pass2Input);
+                
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                // Define formdata
+                var formdata = {
+                    'Password1':pass1Input.value,
+                    'Password2':pass2Input.value
+                };
+        
+                $.ajax({
+                    url:'/resetpassword',
+                    method:'POST',
+                    contentType:'application/json',
+                    headers : {
+                        'X-CSRFToken':csrfToken
+                    },
+                    data:JSON.stringify(formdata),
+                    success:function(data){
+                        if (data.Status) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            }
+                        }
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                      var errorMsg;
+                      if (jqXHR.responseText.startsWith('<!DOCTYPE')) {
+                          errorMsg = 'An unexpected error occurred on the server.';
+                      } else {
+                          errorMsg = JSON.parse(jqXHR.responseText);
+                      }
+                      alert('Error occurred: ' + errorMsg.Msg);
+                      if (errorMsg.redirect_url) {
+                          window.location.href = errorMsg.redirect_url;
+                      }
+                    }
+                });
+                
+                
+            });
+        });
+    </script>
+  </body>
+</html>

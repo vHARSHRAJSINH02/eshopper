@@ -1,0 +1,183 @@
+{% extends "basic.html" %}
+
+{% block content %}
+
+
+
+{% load static %}
+
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Shopping Cart</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid pt-2">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="bg-secondary text-dark">
+                        <tr>
+                            <th>Sr.</th>
+                            <th>Products</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        
+                        {% for item in  cart %}
+                        <tr>
+                            <td class="align-middle">{{ forloop.counter}}</td>
+                            {% csrf_token %}
+                            <td class="align-items-start"><img src="{{ item.p_id.Pro_Image.url }}" alt="" style="width: 50px;"> {{ item.P_name}}</td>
+                            <td class="align-middle p_price" id="p_price_{{ item.cart_id }}">{{ item.P_Price }}</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus cartupdateminues" data-cartid="{{ item.cart_id }}" data-qty="{{ item.c_QTY}}">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div> 
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center quantity" id="quantity_{{ item.cart_id }}" name="Quantity" disabled value="{{ item.c_QTY }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus cartupdateplus" data-cartid="{{ item.cart_id }}" data-qty="{{ item.c_QTY}}">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div> 
+                                </div>
+                            </td>
+                            <td class="align-middle c_total" id="c_total_{{ item.cart_id }}">{{ item.c_Total }}</td>
+                            <td class="align-middle"><button class="btn btn-sm  remove_cart" data-cartid="{{ item.cart_id }}"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                {% comment %} <form class="mb-5" action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control p-4" placeholder="Coupon Code">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">Apply Coupon</button>
+                        </div>
+                    </div>
+                </form> {% endcomment %}
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium subtotal">{{ subtotal }}</h6>
+                        </div>
+                        {% comment %} <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">$10</h6>
+                        </div> {% endcomment %}
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold subtotal">{{ subtotal }}</h5>
+                        </div>
+
+     
+
+                      <a href="/checkout" class="btn btn-primary btn-block border-0 py-3 text-decoration-none">Proceed To Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('.cartupdateplus, .cartupdateminues').on('click', function(){
+                var cartid = $(this).data('cartid'); 
+                var p_qty = $(this).data('qty'); 
+                var url = $(this).hasClass('cartupdateplus') ? '/update_cart_plus' : '/update_cart_minus';
+        
+                $.ajax({
+                    url: url, 
+                    type: 'GET',
+                    data: { cart_id : cartid, pQTY : p_qty  }, 
+                    success: function(response){
+                        var p_qty = response.p_QTY; 
+                        if(p_qty < 1) {
+                            p_qty = 1; // Set the quantity to 1 if it's less than 1
+                        }
+                        $('#quantity_' + cartid).val(p_qty); 
+                        console.log(p_qty);
+                        var p_price = parseFloat($('#p_price_' + cartid).text()); 
+                        var c_total = p_price * parseFloat(p_qty); 
+                        $('#c_total_' + cartid).text(c_total + ' ₹');
+                        var subtotal = 0;
+                        $('.c_total').each(function(){
+                            subtotal += parseFloat($(this).text());
+                        });
+                        $('.subtotal').text(subtotal + ' ₹');
+                    },
+                    error : function(xhr,errmsg,err) {
+                        console.log(xhr.status + ": " + xhr.responseText); 
+                    }
+                });
+            });
+        });
+        
+    </script>
+    <script>
+        document.querySelectorAll('.remove_cart').forEach(button =>{
+            button.addEventListener('click', function(){
+                var cart_id = this.dataset.cartid
+
+                var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                var formdata = {
+                    'cartid': cart_id
+                };
+                $.ajax({
+                    url : '/remove_cart',
+                    method:'POST',
+                    contentType:'application/json',
+                    headers : {
+                        'X-CSRFToken':csrfToken
+                    },
+                    data:JSON.stringify(formdata),
+                    success:function(data){
+                        if (data.Status) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            }
+                        }
+                    },
+                    error:function(error){
+                        var errorMsg = JSON.parse(jqXHR.responseText);
+                        alert('Error occurred: ' + errorMsg.Msg);
+                        if (errorMsg.redirect_url) {
+                            window.location.href = errorMsg.redirect_url;
+                        }
+                    }
+                });
+            });
+        });
+        
+    </script>
+
+    {% endblock  %}

@@ -1,0 +1,92 @@
+{% load static %}
+<!-- Footer Start -->
+<div class="section bg-secondary text-dark ">
+<div class="container-fluid   mt-5 ">
+    <div class="row px-xl-5 pt-5 mx-auto">
+        <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
+            <a href="{% url 'index' %}" class="text-decoration-none">
+                <img style="width: 100px;" class="pl-2 ml-3 mb-2" src="{% static 'img/logo.png' %}" alt="Image">
+            </a>
+            <!-- <p>Dolore erat dolor sit lorem vero amet. Sed sit lorem magna, ipsum no sit erat lorem et magna ipsum dolore amet erat.</p> -->
+            <p class="mb-2 mt-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>A-202,Sumel Business Park-2, Khadia, Ahmedabad, Gujarat - 380002.</p>
+            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>divybavishi001@gmail.com</p>
+            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>+091 84019 15476</p>
+        </div>
+        <div class="col-lg-4 col-md-12">
+                    <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
+                    <div class="d-flex flex-column justify-content-start">
+                        <a class="text-dark mb-2" href="{% url 'index' %}"><i class="fa fa-angle-right mr-2"></i>Home</a>
+                        <a class="text-dark mb-2" href="{% url 'Shop' %}"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
+                        <a class="text-dark mb-2" href="{% url 'cart' %}"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
+                        <a class="text-dark mb-2" href="{% url 'checkout' %}"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
+                        <a class="text-dark" href="{% url 'contact' %}"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                    </div>
+        </div>
+        <div class="col-lg-4 col-md-12">
+                    <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
+                    <form action="">
+                        <div class="form-group">
+                            <input type="email" class="form-control border-0 py-4" placeholder="Your Email" required="required" />
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-block border-0 py-3" type="submit">Subscribe Now</button>
+                        </div>
+                        
+                    </form>
+                    <div class="d-inline-flex align-items-center pt-3 ">
+                        <a class="text-dark px-3" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-dark px-3" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-dark px-3" href="">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-dark px-3" href="">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a class="text-dark pl-3" href="">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+        </div>
+    </div>
+
+    <div class="row border-top border-light mx-xl-5 py-4">
+        <div class="col-md-12 px-xl-0">
+            <p class="mb-md-0 text-center text-md-left text-dark">
+                &copy; <a class="text-dark font-weight-semi-bold" href="#">Black Raven</a>. All Rights Reserved. Designed
+                by
+                <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">blackravenfashion.com</a>
+                Distributed By <a href="https://themewagon.com" target="_blank">Divy Bavishi</a>
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+<!-- Contact Javascript File -->
+<script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+<script src="{% static  'mail/contact.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,473 @@
+
+{% extends "basic.html" %}
+{% block content %}
+
+
+{% load static %}
+
+    <!-- Page Header Start -->
+
+    <div class="section">
+    <div class="container-fluid bg-secondary mb-2">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase pt-5 mb-3">Checkout</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Checkout</p>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Page Header End -->
+
+
+    <!-- Checkout Start -->
+    <div class="section">
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
+                    <div class="row">
+                        {% for i in shippings %}
+                        <div class="col-md-8 form-group">
+                            <div class="radio-border  d-flex justify-content-center align-items-center">
+                                <input type="radio" class="custom-radio radio-text btn-check mb-2 shipping-option" name="vbtn-radio" id="vbtn-radio1" value="{{ i.shipadd_id }}" data-area-name="{{ i.Area_Name }}" autocomplete="off" >
+                            <p class="m-0 mb-2">    
+                                {{ i.First_Name }} {{ i.Last_Name }}, {{ i.Address }}, {{ i.Area_Name }}, {{ i.Area_Name.City_Name }}, {{i.Area_Name.City_Name.State_Name}}, {{i.Area_Name.Pincode}}.
+                                Phn.: {{ i.Mobile}}. 
+                                <a href="#"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="edit-address" data-id="{{ i.shipadd_id }}" data-first-name="{{ i.First_Name }}" data-last-name="{{ i.Last_Name }}" data-email="{{ i.Email }}" data-mobile="{{ i.Mobile }}" data-address="{{ i.Address }}" data-area-name="{{ i.Area_Name }}">Edit Address</a>
+                                OR
+                                <a href="{% url 'deleteshippingaddress' i.shipadd_id %}">Delete address</a>.
+                             </p>
+                            </div>
+                            </div>
+                        {% endfor %}
+                             <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog  modal-dialog-scrollable w-100 justify-content-center">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Address</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times text-primary"></i></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-md-12 form-group">
+                                            <label>First Name</label>
+                                            <input class="form-control" type="text" name="firstname1" id="firstname1" value=""  placeholder="John">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>Last Name</label>
+                                            <input class="form-control" type="text" name="lastname1" id="lastname1" value="" placeholder="Doe">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>E-mail</label>
+                                            <input class="form-control" type="text" name="email1" id="email1" value=""  placeholder="example@email.com">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>Mobile No</label>
+                                            <input class="form-control" type="text" name="mobileno1" id="mobileno1" value=""  placeholder="+123 456 789">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>Address Line 1</label>
+                                            <input class="form-control" type="text" name="address1" id="address1" value=""  placeholder="123 Street">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>Area</label>
+                                            <input class="form-control" type="text" name="areaname1" id="areaname1" value=""  placeholder="123 Street">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>City</label>
+                                            <input class="form-control" type="text" name="city1" value=""  placeholder="New York">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>State</label>
+                                            <input class="form-control" type="text" name="state"  value="" placeholder="New York">
+                                        </div>
+                                        <div class="col-md-12 form-group">
+                                            <label>ZIP Code</label>
+                                            <input class="form-control" type="text" name="zip-code" value=""  placeholder="123">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary editaddress">Save Address</button>
+                                    </div>
+                                </div>
+                           
+                            </div>
+                        </div>
+                    <!-- Scrollable modal -->
+                        
+                        <div class="col-md-12 form-group mt-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input form-control" id="shipto">
+                                <label class="custom-control-label font-weight-semi-bold" for="shipto"  data-toggle="collapse" data-target="#shipping-address">Ship to different address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse mb-4" id="shipping-address">
+                    <h4 class="font-weight-semi-bold mb-4">Shipping Address</h4>
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" type="text" name="firstname" id="firstname"  placeholder="John">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Doe">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" type="text" name="email" id="email"  placeholder="example@email.com">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" name="mobileno" id="mobileno"  placeholder="+123 456 789">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input class="form-control" type="text" name="address" id="address"  placeholder="123 Street">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Area</label>
+                            <input class="form-control" type="text" name="areaname" id="areaname"  placeholder="123 Street">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" type="text" name="city"   placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" type="text" name="state"  placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input class="form-control" type="text" name="zip-code"  placeholder="123">
+                        </div>
+                        <div class="col-md-4">
+                            <label></label>
+                            <button class="btn btn-lg btn-block btn-primary font-weight-bold  shipaddress">Add shipping Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Products</h5>
+                        {% for item in cart_items %}
+                        <div class="d-flex justify-content-between">
+                            <p>{{ item.P_name }}</p>
+                            <p>{{ item.c_QTY }} nos.</p>
+                            <p>{{ item.P_Price }} &#8377;/nos.</p>
+                        </div>
+                        {% endfor %}
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium subtotal">{{ subtotal }} &#8377;</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium shipping-charge"> &#8377;</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold total">{{ total }} &#8377;</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Payment</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="paypal">
+                                <label class="custom-control-label" for="paypal">Cash</label>
+                            </div>
+                            
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
+                                <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
+                            </div>
+                            <!-- Bank transfer fields -->
+                            <div id="bank-transfer-fields" style="display: none;">
+                                <div class="form-group pt-3">
+                                    <label for="Card-number">Card Number</label>
+                                    <input type="text" class="form-control" id="Card-number" placeholder="1234-1234-1234-1234">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Expired-Date">Expired Date</label>
+                                    <input type="text" class="form-control" id="Expired-Date" placeholder="MM-YY">
+                                    {% comment %} <input type="text" class="form-control" id="Expired-Date" placeholder="YY"> {% endcomment %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="CVV-Code">CVV Code</label>
+                                    <input type="text" class="form-control" id="CVV-Code" placeholder="097">
+                                </div>
+                                <div class="form-group">
+                                    <label for="account-holder-name">Account Holder Name</label>
+                                    <input type="text" class="form-control" id="account-holder-name" placeholder="John Doe">
+                                </div>
+                                <!-- Add more fields as needed -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 orderformsubmit">Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Checkout End -->
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.shipping-option').on('change', function(){
+                var areaName = $(this).data('area-name'); 
+
+                $.ajax({
+                    url: '/get_shipping_charge', 
+                    type: 'GET',
+                    data: { area_name : areaName }, 
+
+                    
+                    success: function(response){
+                        var shipping = response.shipping_charge; 
+                        $('.shipping-charge').text(shipping + ' ₹'); 
+                        console.log(shipping);
+                        var subtotal = parseFloat($('.subtotal').text()); 
+                        var total = subtotal + parseFloat(shipping); 
+                        $('.total').text(total + ' ₹'); 
+                    },
+                    error : function(xhr,errmsg,err) {
+                        console.log(xhr.status + ": " + xhr.responseText); 
+                    }
+                });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('.edit-address').on('click', function(){
+                
+                var firstName = $(this).data('first-name');
+                var lastName = $(this).data('last-name');
+                var email = $(this).data('email');
+                var mobileNo = $(this).data('mobile');
+                var address = $(this).data('address');
+                var areaName = $(this).data('area-name');
+                var shipadd = $(this).data('id');
+        
+                
+                $('#firstname1').val(firstName);
+                $('#lastname1').val(lastName);
+                $('#email1').val(email);
+                $('#mobileno1').val(mobileNo);
+                $('#address1').val(address);
+                $('#areaname1').val(areaName);
+                $('.editaddress').data('shipadd', shipadd);
+            });
+        });
+        
+    
+        $('.editaddress').on('click', function(){
+                //var shipadd_id = shipadd;
+                var shipadd_id = $(this).data('shipadd');
+                console.log(shipadd_id);
+                var firstname = document.querySelector('#firstname1');
+                console.log(firstname);
+                var lastname = document.querySelector('#lastname1');
+                var email = document.querySelector('#email1');
+                var mobileno = document.querySelector('#mobileno1');
+                var address = document.querySelector('#address1');
+                var areaname = document.querySelector('#areaname1');
+
+
+                var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+                var formdata = {
+                    'Shipadd_id': shipadd_id,
+                    'First_Name': firstname.value,
+                    'Last_Name': lastname.value,
+                    'Email': email.value,
+                    'Mobile': mobileno.value,
+                    'Address': address.value,
+                    'Area': areaname.value
+
+                };
+                $.ajax({
+                    url : '/editshipaddress',
+                    method:'POST',
+                    contentType:'application/json',
+                    headers : {
+                        'X-CSRFToken':csrfToken
+                    },
+                    data:JSON.stringify(formdata),
+                    success:function(data){
+                        if (data.Status) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            }
+                        }
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        try {
+                            var errorMsg = JSON.parse(jqXHR.responseText);
+                            alert('Error occurred: ' + errorMsg.Msg);
+                            if (errorMsg.redirect_url) {
+                                window.location.href = errorMsg.redirect_url;
+                            }
+                        } catch (e) {
+                            console.error('Could not parse response as JSON: ', jqXHR.responseText);
+                        }
+                    }
+                });
+                });
+       
+    </script>
+    <script>
+        document.querySelectorAll('.shipaddress').forEach(button =>{
+            button.addEventListener('click', function(){
+                var firstname = document.querySelector('#firstname');
+                var lastname = document.querySelector('#lastname');
+                var email = document.querySelector('#email');
+                var mobileno = document.querySelector('#mobileno');
+                var address = document.querySelector('#address');
+                var areaname = document.querySelector('#areaname');
+
+                
+                var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+                var formdata = {
+                    'First_Name': firstname.value,
+                    'Last_Name': lastname.value,
+                    'Email': email.value,
+                    'Mobile': mobileno.value,
+                    'Address': address.value,
+                    'Area': areaname.value
+
+                };
+                $.ajax({
+                    url : '/shippingaddress',
+                    method:'POST',
+                    contentType:'application/json',
+                    headers : {
+                        'X-CSRFToken':csrfToken
+                    },
+                    data:JSON.stringify(formdata),
+                    success:function(data){
+                        if (data.Status) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            }
+                        }
+                    },
+                    error:function(jqXHR, textStatus, errorThrown){
+                        try {
+                            var errorMsg = JSON.parse(jqXHR.responseText);
+                            alert('Error occurred: ' + errorMsg.Msg);
+                            if (errorMsg.redirect_url) {
+                                window.location.href = errorMsg.redirect_url;
+                            }
+                        } catch (e) {
+                            console.error('Could not parse response as JSON: ', jqXHR.responseText);
+                        }
+                    }
+                });
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $('input[type=radio][name=payment]').change(function() {
+            if (this.id == 'paypal') {
+                $('#paypal-email-field').show();
+                $('#bank-transfer-fields').hide();
+            } else if (this.id == 'banktransfer') {
+                $('#paypal-email-field').hide();
+                $('#bank-transfer-fields').show();
+            }
+        });
+    });
+    </script>
+    <script>
+        document.querySelectorAll('.orderformsubmit').forEach(button =>{
+            button.addEventListener('click', function(){
+            var paymentMethod;
+            if ($('#paypal').is(':checked')) {
+                paymentMethod = 'cash';
+            } else if ($('#banktransfer').is(':checked')) {
+                paymentMethod = 'card';
+            }
+            var shippingId = $('input[name="vbtn-radio"]:checked').val();
+            console.log(shippingId);
+
+            var data = {
+                'payment_method': paymentMethod,
+                'paypal_email': $('#paypal-email').val(),
+                'card_number': $('#Card-number').val(),
+                'expired_date': $('#Expired-Date').val(),
+                'cvv_code': $('#CVV-Code').val(),
+                'account_holder_name': $('#account-holder-name').val(),
+                'shipping_id': shippingId
+            };
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+            $.ajax({
+                url: '/Complete_Order', 
+                type: 'POST',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                },
+                data: $.param(data),
+                success: function(response) {
+                    if (data.Status) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                        }
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown){
+                    try {
+                        var errorMsg = JSON.parse(xhr.responseText);
+                        alert('Error occurred: ' + errorMsg.Msg);
+                        if (errorMsg.redirect_url) {
+                            window.location.href = errorMsg.redirect_url;
+                        }
+                    } catch (e) {
+                        console.error('Could not parse response as JSON: ', xhr.responseText);
+                    }
+                }
+                
+            });
+
+        });
+    });
+    </script>
+
+
+    {% endblock  %}
